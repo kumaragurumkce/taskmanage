@@ -17,12 +17,9 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/sample">sample</router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/sample">sample</router-link>
-          </li>
-          
-        </ul>
+    </ul>
       </div>
+      <router-link class="nav-link" to="/"><i class="fa-solid fa-user user-profile"></i></router-link>
     </div>
   </nav>
 </template>

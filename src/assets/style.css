@@ -41,3 +41,6 @@ display: -webkit-box;
 line-clamp: 5;
 font-weight: 600;
 }
+.user-profile{
+    font-size: 35px;
+}

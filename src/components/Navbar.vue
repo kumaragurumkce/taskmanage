@@ -17,6 +17,10 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/sample">sample</router-link>
           </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/sample">sample</router-link>
+          </li>
+          
         </ul>
       </div>
     </div>

@@ -1,0 +1,43 @@
+.textarea-field{
+    border: none;
+}
+.modal-save,.Addtask{
+    border: none;
+  color: white;
+  font-weight: bold;
+white-space: nowrap;
+  text-align: center;
+  text-decoration: none;
+padding: 0.6rem 1rem ;
+border-radius: 20px;
+    background: rgb(215,23,59);
+background: linear-gradient(90deg, rgba(215,23,59,1) 21%, rgba(233,113,144,1) 100%);
+}
+
+
+.Addtask:hover{
+    background: rgb(215,23,59);
+}
+.task-title-input{
+    max-width: 500px;
+    border: 1px solid ;
+}
+.deleteIcon,.editIcon{
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.card-main{
+    min-height: 200px;
+    overflow: hidden;
+
+}
+.task-content{
+overflow: hidden;
+text-overflow: ellipsis;
+display: -webkit-box;
+-webkit-box-orient: vertical;
+-webkit-line-clamp: 5; /* Limit content to 5 lines */
+line-clamp: 5;
+
+}

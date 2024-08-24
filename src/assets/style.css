@@ -44,7 +44,12 @@ font-weight: 600;
 
 .user-profile{
     font-size: 25px;
+    color:  rgb(87, 96, 158);
+    font-weight: 900;
+    border: none;
+    cursor: pointer;
 }
+
 
 .card-date{
     font-weight: 700;
@@ -65,4 +70,54 @@ font-weight: 600;
     background: #6978da;
     font-weight: 600;
     background: rgb(105,120,218);background: linear-gradient(90deg, rgba(105,120,218,1) 18%, rgba(105,120,218,1) 60%);
+}
+
+/* 
+.dropdown-content {
+
+    background: rgb(105,120,218);
+    min-width: 160px;
+    position: absolute;
+    z-index: 1000;
+    right: 0;
+    
+    border-radius: 10px;
+    opacity: 1;
+    visibility: hidden; 
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    display: block; 
+} */.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  display: block;
+  padding: 0.5rem 0;
+  margin: 0;
+  background: #8996e9;
+  
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.4rem 1rem;
+  clear: both;
+  color: #333;
+  text-align: inherit;
+  text-decoration: none;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.dropdown-item:hover {
+
+    background: rgb(128,175,247);
+    background: linear-gradient(90deg, rgba(128,175,247,1) 21%, rgba(153,166,254,1) 100%);
 }

@@ -24,10 +24,32 @@
         </ul>
       </div>
       <button @click="langswt" class="langbtn me-5 d-none d-lg-block text-white">{{ langbtn }}</button>
+      <div class="dropdown" :class="{ 'is-active': isDropdownOpen }">
+      
+      <i class="fa-regular fa-user user-profile"  @click="toggleDropdown"></i>
 
-      <router-link class="nav-link d-none d-lg-block" to="/"><i class="fa-solid fa-user user-profile"></i></router-link>
+      <div class="dropdown-menu mt-3" v-if="isDropdownOpen">
+        <router-link class="dropdown-item text-white" @click="closeDropdown" to="/">Profile</router-link>
+        <router-link class="dropdown-item text-white" @click="closeDropdown" to="/Profile">Login</router-link>
+        <router-link class="dropdown-item text-white" @click="closeDropdown" to="/Profile">Logout</router-link>
+
+      </div>
     </div>
-  </nav>
+
+      <!-- <div class="dropdowns">
+        
+      <i class="fa-regular fa-user user-profile" @mouseleave="isOpen=false"></i>
+  
+        <div class="dropdown-content mt-2"  v-show="isOpen">
+            <router-link to="/Profile" @click="selectItem">Profile</router-link>
+            <router-link to="/Profile" @click="selectItem">Login</router-link>
+            <router-link to="/Profile" @click="selectItem">Logout</router-link>
+          </div>
+    </div>
+    </div> -->
+      <!-- <router-link class="nav-link d-none d-lg-block" to="/"><i class="fa-solid fa-user user-profile"></i></router-link> -->
+</div>
+</nav>
 </template>
 
 <script>
@@ -37,6 +59,8 @@ export default {
   data() {
     return {
       langbtn: '',
+      isDropdownOpen: false,
+
     };
   },
   mounted() {
@@ -50,7 +74,13 @@ export default {
     this.updateButtonLabel();
   },
   methods: {
-    langswt() {
+    toggleDropdown() {
+      this.isDropdownOpen = !this.isDropdownOpen;
+    },
+    closeDropdown() {
+      this.isDropdownOpen = false;
+    },
+        langswt() {
       // Toggle between English ('EN') and Japanese ('JP')
       this.$i18n.locale = this.$i18n.locale === 'EN' ? 'JP' : 'EN';
 

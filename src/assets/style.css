@@ -41,9 +41,28 @@ display: -webkit-box;
 line-clamp: 5;
 font-weight: 600;
 }
+
 .user-profile{
     font-size: 25px;
 }
+
 .card-date{
     font-weight: 700;
+}
+.navbar{
+    
+    background: rgb(128,175,247);
+    background: linear-gradient(90deg, rgba(128,175,247,1) 21%, rgba(153,166,254,1) 100%);
+}
+.navbar-brand,.navbar .nav-link{
+    font-weight: 600;
+}
+.langbtn{
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: none;
+    font-size: 15px;
+    background: #6978da;
+    font-weight: 600;
+    background: rgb(105,120,218);background: linear-gradient(90deg, rgba(105,120,218,1) 18%, rgba(105,120,218,1) 60%);
 }

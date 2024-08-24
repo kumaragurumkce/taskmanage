@@ -42,5 +42,8 @@ line-clamp: 5;
 font-weight: 600;
 }
 .user-profile{
-    font-size: 35px;
+    font-size: 25px;
+}
+.card-date{
+    font-weight: 700;
 }

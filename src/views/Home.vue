@@ -5,7 +5,8 @@
       <div class="col-6">
         <form @submit.prevent="submitForm">
           <div class="d-flex justify-content-between">
-            <input class="form-control task-title-input me-2" v-model="task.title" placeholder="Task Title" required />
+            <input class="form-control task-title-input me-2" 
+             v-model="task.title" placeholder="Task Title" required />
             <button type="submit" class="Addtask">
               {{ isEditing ? 'Update Task' : 'Add Task' }}
             </button>
@@ -19,11 +20,11 @@
     <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
       <div class="modal-content"  :style="{background: task.backgroundColor}">
         <div class="modal-header">
-          <button class="btn-close border-none" @click="closeModal">&times;</button>
+          <button class="model-close border-none" @click="closeModal">&times;</button>
         </div>
         <div class="modal-body">
           <textarea
-            class="modal-textarea"
+            class="modal-textarea" :style="{background: task.backgroundColor}"
             v-model="task.title"
             @input="adjustTextareaHeight"
             @blur="updateTask"
@@ -52,6 +53,7 @@ export default {
       showModal: false, // State to control the modal visibility
     };
   },
+ 
   methods: {
     ...mapActions(['addTask', 'updateTask']),
     
@@ -70,6 +72,7 @@ export default {
       }
       this.resetForm();
     },
+    
 
     resetForm() {
       this.task = { id: null, title: '', date: '', backgroundColor: '', fontColor: '' };
@@ -127,6 +130,9 @@ export default {
 </script>
 
 <style scoped>
+.task-title-input{
+
+}
 /* Modal Styles */
 .modal-overlay {
   /* visibility: visible; */
@@ -159,13 +165,16 @@ export default {
   justify-content: end;
 }
 
-.btn-close {
+.model-close {
   background: none;
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
 }
-
+.model-close:active{
+  border: none;
+  outline: none;
+}
 .modal-body {
   margin-top: 10px;
   max-height: calc(80vh - 60px); /* Adjust this based on modal header/footer */
@@ -177,10 +186,29 @@ export default {
   min-height: 100px;
   padding: 10px;
   font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 0px solid #ddd;
+   border-radius: 4px; 
+  border: none;
   box-sizing: border-box;
   resize: none; /* Disable manual resizing */
   overflow-y: hidden; /* Hide vertical scrollbar */
+}
+.modal-textarea:focus{
+  outline: black;
+  border:1px solid rgba(0, 0, 0, 0.5) 
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
 }
 </style>

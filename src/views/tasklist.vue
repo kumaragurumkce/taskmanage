@@ -1,9 +1,9 @@
 <template>
     <div class="container-fluid my-5">
       <div class="row">
-        <div class="col-md-3" :class="{'mt-3' : index >=4 }"
+        <div class="col-md-6 col-sm-6 col-12 col-lg-3" :class="{'mt-lg-3' : index >=4 }"
            v-for="(task,index) in allTasks.slice().reverse()" :key="task.id">
-          <div class="card card-main task-card position-relative border-none" :style="{backgroundColor:task.backgroundColor,color:task.fontColor}">
+          <div class="card card-main task-card position-relative border-none mt-2" :style="{backgroundColor:task.backgroundColor,color:task.fontColor}">
             <div class="task-content mt-3 mx-2">
               {{ task.title }}
             </div>

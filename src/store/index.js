@@ -6,6 +6,7 @@ const store = createStore({
       
       tasks: JSON.parse(localStorage.getItem('tasks')) || [],
       namestore: JSON.parse(localStorage.getItem('namestore')) || [],
+      locale:'EN'
     };
   },
   mutations: {

@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid my-5">
+    <div class="container-fluid my-5 tasklist-position" >
       <div class="row">
         <div class="col-md-6 col-sm-6 col-12 col-lg-3" :class="{'mt-lg-3' : index >=4 }"
            v-for="(task,index) in allTasks.slice().reverse()" :key="task.id">
@@ -48,6 +48,8 @@
   .row > .col-md-3:nth-child(n + 5) {
   margin-top: 1rem; 
 }*/
-
+.tasklist-position{
+  position:relative;
+}
   </style>
   

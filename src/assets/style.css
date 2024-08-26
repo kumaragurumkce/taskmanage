@@ -10,17 +10,17 @@ white-space: nowrap;
   text-decoration: none;
 padding: 0.6rem 1rem ;
 border-radius: 20px;
-    background: rgb(215,23,59);
-background: linear-gradient(90deg, rgba(215,23,59,1) 21%, rgba(233,113,144,1) 100%);
+background: rgb(105,120,218);
+background: linear-gradient(90deg, rgba(105,120,218,1) 25%, rgba(129,141,224,0.9920343137254902) 79%);
 }
 
 
 .Addtask:hover{
-    background: rgb(215,23,59);
+background: rgb(105,120,218);
 }
 .task-title-input{
     max-width: 500px;
-    border: 1px solid ;
+    border: 2px solid #89ACFA ;
 }
 .deleteIcon,.editIcon{
     font-size: 1.2rem;
@@ -30,6 +30,7 @@ background: linear-gradient(90deg, rgba(215,23,59,1) 21%, rgba(233,113,144,1) 10
 .card-main{
     min-height: 200px;
     overflow: hidden;
+    border: none;
     box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 .task-content{
@@ -71,7 +72,11 @@ font-weight: 600;
     font-weight: 600;
     background: rgb(105,120,218);background: linear-gradient(90deg, rgba(105,120,218,1) 18%, rgba(105,120,218,1) 60%);
 }
-
+.form-control:focus {
+    outline: none; /* Remove the default outline */
+    box-shadow: none;
+  }
+  
 /* 
 .dropdown-content {
 
@@ -120,4 +125,32 @@ font-weight: 600;
 
     background: rgb(128,175,247);
     background: linear-gradient(90deg, rgba(128,175,247,1) 21%, rgba(153,166,254,1) 100%);
+}
+.blinking-message{
+    animation: blink 0.5s ease-in-out 1;
+}
+
+.border-success-custom{
+    border: 2px solid #6978DA !important;
+}
+.border-danger-custom{
+    border: 2px solid #e43a1c;
+    
+}
+@keyframes blink{
+    0% {
+        opacity: 1;
+      }
+      25% {
+        opacity: 0.5;
+      }
+      50% {
+        opacity: 0;
+      }
+      75% {
+        opacity: 0.5;
+      }
+      100% {
+        opacity: 1;
+      }
 }

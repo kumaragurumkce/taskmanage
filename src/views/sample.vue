@@ -2,18 +2,18 @@
   <div class="container-fluid">
     <h1 class="text-center">Task Management</h1>
     <div class="row justify-content-center">
-      <div class="col-6">
+      <div class="col-6 ">
         <form @submit.prevent="submitForm">
           <div class="d-flex justify-content-between align-item-center">
             <textarea class="form-control task-title-input me-2 " id="expandableInput"
-             v-model="task.title" :class="{'border-success-custom': isValid, 'border-danger-custom': titleError}"
+            v-model="newTaskTitle" :class="{'border-success-custom': isValid, 'border-danger-custom': titleError}"
              :style="{ height: textareaHeight, overflowY: overflow }"
              @input="handleInput"
               @blur="validateinputAdd"
               ref="textarea"
              placeholder="Task Title" />
             <button type="submit" class="Addtask">
-              {{ isEditing ? 'Update Task' : 'Add Task' }}
+              Add Task
             </button>
           </div>
         </form>
@@ -32,7 +32,7 @@
         <div class="modal-body">
           <textarea
           class="modal-textarea" :style="{background: task.backgroundColor}"
-            v-model="task.title"
+            v-model="updateTitle"
             @input="adjustTextareaHeight"
             @blur="updateTask"
             ref="textarea"
@@ -47,43 +47,43 @@
 <script>
 import { mapActions } from 'vuex';
 import TaskList from '../views/tasklist.vue';
+
 export default {
   components: {
     TaskList,
   },
   data() {
-    return {
-      task: { id: null, title: '', date: '', backgroundColor: '', fontColor: '' },
-      isEditing: false,
-      showModal: false, // State to control the modal visibility
-      titleError: '',
-      isValid: false,
-      textareaHeight: '50px',
-      maxHeight: '200px',
-      overflow: 'hidden',
+  return {
+    task: { id: null, title: '', date: '', backgroundColor: '', fontColor: '' },
+    newTaskTitle: '', // Initialize as an empty string
+    modalTitle: '', // Initialize as an empty string
+    showModal: false,
+    titleError: '',
+    isValid: false,
+    textareaHeight: '50px',
+    maxHeight: '200px',
+    overflow: 'hidden',
+  };
+},
 
-    };
-  },
- 
   methods: {
     ...mapActions(['addTask', 'updateTask']),
     handleInput() {
-      // Clear the error message when the user starts typing
       this.titleError = '';
       this.isValid = false;
-      this.addtaskInputheightadjust(); // Adjust the textarea height as needed
+      this.adjustTextareaHeight(); // Adjust the textarea height as needed
     },
-    validateinputAdd() {
-      // Validation logic
-      if (this.task.title.trim() === '') {
-        this.titleError = 'Task cannot be empty. Please enter a task before adding it.';
-        this.isValid = false;
-      } else {
-        this.titleError = '';
-        this.isValid = true;
-      }
-    },
-    addtaskInputheightadjust() {
+    validateInputAdd() {
+  if (!this.newTaskTitle || this.newTaskTitle.trim() === '') { // Safely check if newTaskTitle is not undefined or empty
+    this.titleError = 'Task cannot be empty. Please enter a task before adding it.';
+    this.isValid = false;
+  } else {
+    this.titleError = '';
+    this.isValid = true;
+  }
+},
+
+    adjustTextareaHeight() {
       this.$nextTick(() => {
         const textarea = this.$refs.textarea;
         textarea.style.height = '50px';
@@ -99,14 +99,18 @@ export default {
       });
     },
     submitForm() {
-      this.validateinputAdd();
+      this.validateInputAdd();
       if (this.isValid) {
-        if (this.isEditing) {
+        if (this.showModal) {
+        this.task.title= this.updateTitle;
+
           this.updateTask(this.task);
+          this.closeModal();
         } else {
           this.task.id = Date.now();
           const now = new Date();
           const date = now.toISOString().split('T')[0];
+          this.task.title=this.newTaskTitle
           this.task.date = date;
           this.task.backgroundColor = this.getLightBackgroundColor();
           this.task.fontColor = this.getDarkFontColor();
@@ -117,42 +121,36 @@ export default {
     },
     resetForm() {
       this.task = { id: null, title: '', date: '', backgroundColor: '', fontColor: '' };
-      this.isEditing = false;
+      this.newTaskTitle = ''; // Reset add task input
+      this.modalTitle = ''; // Reset modal title
       this.titleError = '';
       this.isValid = false;
       this.textareaHeight = '50px';
       this.overflow = 'hidden';
-      this.addtaskInputheightadjust(); // Adjust height on form reset
+      this.adjustTextareaHeight(); // Adjust height on form reset
     },
-
     editTask(task) {
       this.task = { ...task };
-      this.isEditing = true;
+      this.updateTitle=task.title;
+      console.log(this.updateTitle,'............');
+    
+      
       this.showModal = true;
       this.$nextTick(() => {
         this.adjustTextareaHeight(); // Adjust height when the modal is shown
       });
     },
     updateTask() {
-      
-      
-        this.$store.dispatch('updateTask', this.task);
-        this.resetForm();
-        this.closeModal();
-      
+      this.task.title=this.updateTitle;
+      this.$store.dispatch('updateTask', this.task);
+      this.resetForm();
+      this.closeModal();
     },
     closeModal() {
       this.showModal = false;
     },
-    adjustTextareaHeight() {
-      const textarea = this.$refs.textarea;
-      textarea.style.height = 'auto'; // Reset height
-      textarea.style.height = textarea.scrollHeight + 'px'; // Adjust based on scroll height
-    },
     getLightBackgroundColor() {
-      // Generate a light background color
-          // Generate soft pastel-like colors for a classic light theme
-          const hue = Math.floor(Math.random() * 360); // Random hue
+      const hue = Math.floor(Math.random() * 360); // Random hue
       const saturation = 60 + Math.random() * 20; // Saturation between 60% and 80%
       const lightness = 80 + Math.random() * 10; // Lightness between 80% and 90%
       return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
@@ -165,7 +163,7 @@ export default {
     },
   },
   mounted() {
-    this.addtaskInputheightadjust();
+    this.adjustTextareaHeight();
   },
 };
 </script>

@@ -2,43 +2,36 @@
   <div class="container-fluid">
     <h1 class="text-center">Task Management</h1>
     <div class="row justify-content-center">
-      <div class="col-6 ">
-        
+      <div class="col-6">
         <form @submit.prevent="submitForm">
-          <div class="d-flex justify-content-between header-2">
-            <textarea
-              id="expandableInput"
-              class="border-none task-title-input me-2"
-              :class="{'border-success-custom': isValid, 'border-danger-custom': titleError}"
-              v-model="task.title"
-              placeholder="Task Title"
-              :style="{ height: textareaHeight, overflowY: overflow }"
-              @input="addtaskInputheightadjust"
+          <div class="d-flex justify-content-between align-item-center">
+            <textarea class="form-control task-title-input me-2 " id="expandableInput"
+             v-model="task.title" :class="{'border-success-custom': isValid, 'border-danger-custom': titleError}"
+             :style="{ height: textareaHeight, overflowY: overflow }"
+             @input="handleInput"
               @blur="validateinputAdd"
               ref="textarea"
-            />
-            <button type="submit" class="Addtask ">
+             placeholder="Task Title" />
+            <button type="submit" class="Addtask">
               {{ isEditing ? 'Update Task' : 'Add Task' }}
             </button>
           </div>
-          <div v-if="titleError" class="text-danger blinking-message">
+        </form>
+        <div v-show="titleError" class="text-danger error-message blinking-message">
             {{ titleError }}
           </div>
-        </form>
       </div>
     </div>
-<div class="edit-css">
     <TaskList @edit-task="editTask" />
-  </div> <!-- Custom Modal -->
+    <!-- Custom Modal -->
     <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
-      <div class="modal-content" :style="{ background: task.backgroundColor }">
+      <div class="modal-content"  :style="{background: task.backgroundColor}">
         <div class="modal-header">
           <button class="model-close border-none" @click="closeModal">&times;</button>
         </div>
         <div class="modal-body">
           <textarea
-            class="modal-textarea"
-            :style="{ background: task.backgroundColor }"
+          class="modal-textarea" :style="{background: task.backgroundColor}"
             v-model="task.title"
             @input="adjustTextareaHeight"
             @blur="updateTask"
@@ -51,11 +44,9 @@
     </div>
   </div>
 </template>
-
 <script>
 import { mapActions } from 'vuex';
 import TaskList from '../views/tasklist.vue';
-
 export default {
   components: {
     TaskList,
@@ -64,37 +55,24 @@ export default {
     return {
       task: { id: null, title: '', date: '', backgroundColor: '', fontColor: '' },
       isEditing: false,
-      showModal: false,
+      showModal: false, // State to control the modal visibility
       titleError: '',
       isValid: false,
       textareaHeight: '50px',
       maxHeight: '200px',
       overflow: 'hidden',
+
     };
   },
+ 
   methods: {
     ...mapActions(['addTask', 'updateTask']),
-
-    submitForm() {
-      // Perform validation before submitting
-      this.validateinputAdd();
-      
-      if (this.isValid) {
-        if (this.isEditing) {
-          this.updateTask(this.task);
-        } else {
-          this.task.id = Date.now();
-          const now = new Date();
-          const date = now.toISOString().split('T')[0];
-          this.task.date = date;
-          this.task.backgroundColor = this.getLightBackgroundColor();
-          this.task.fontColor = this.getDarkFontColor();
-          this.addTask(this.task);
-        }
-        this.resetForm();
-      }
+    handleInput() {
+      // Clear the error message when the user starts typing
+      this.titleError = '';
+      this.isValid = false;
+      this.addtaskInputheightadjust(); // Adjust the textarea height as needed
     },
-
     validateinputAdd() {
       // Validation logic
       if (this.task.title.trim() === '') {
@@ -105,7 +83,6 @@ export default {
         this.isValid = true;
       }
     },
-
     addtaskInputheightadjust() {
       this.$nextTick(() => {
         const textarea = this.$refs.textarea;
@@ -121,7 +98,23 @@ export default {
         }
       });
     },
-
+    submitForm() {
+      this.validateinputAdd();
+      if (this.isValid) {
+        if (this.isEditing) {
+          this.updateTask(this.task);
+        } else {
+          this.task.id = Date.now();
+          const now = new Date();
+          const date = now.toISOString().split('T')[0];
+          this.task.date = date;
+          this.task.backgroundColor = this.getLightBackgroundColor();
+          this.task.fontColor = this.getDarkFontColor();
+          this.addTask(this.task);
+        }
+        this.resetForm();
+      }
+    },
     resetForm() {
       this.task = { id: null, title: '', date: '', backgroundColor: '', fontColor: '' };
       this.isEditing = false;
@@ -140,7 +133,6 @@ export default {
         this.adjustTextareaHeight(); // Adjust height when the modal is shown
       });
     },
-
     updateTask() {
       if (this.isEditing) {
         this.$store.dispatch('updateTask', this.task);
@@ -148,28 +140,26 @@ export default {
         this.closeModal();
       }
     },
-
     closeModal() {
       this.showModal = false;
     },
-
     adjustTextareaHeight() {
       const textarea = this.$refs.textarea;
-      textarea.style.height = 'auto';
-      textarea.style.height = textarea.scrollHeight + 'px';
+      textarea.style.height = 'auto'; // Reset height
+      textarea.style.height = textarea.scrollHeight + 'px'; // Adjust based on scroll height
     },
-
     getLightBackgroundColor() {
-      const hue = Math.floor(Math.random() * 360);
-      const saturation = 60 + Math.random() * 20;
-      const lightness = 80 + Math.random() * 10;
+      // Generate a light background color
+          // Generate soft pastel-like colors for a classic light theme
+          const hue = Math.floor(Math.random() * 360); // Random hue
+      const saturation = 60 + Math.random() * 20; // Saturation between 60% and 80%
+      const lightness = 80 + Math.random() * 10; // Lightness between 80% and 90%
       return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     },
-
     getDarkFontColor() {
-      const hue = Math.floor(Math.random() * 360);
-      const saturation = 40 + Math.random() * 20;
-      const lightness = 20 + Math.random() * 10;
+      const hue = Math.floor(Math.random() * 360); // Random hue
+      const saturation = 40 + Math.random() * 20; // Saturation between 40% and 60%
+      const lightness = 20 + Math.random() * 10; // Lightness between 20% and 30%
       return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     },
   },
@@ -180,32 +170,29 @@ export default {
 </script>
 
 <style scoped>
+.task-title-input{
+}
 textarea {
-  max-width: 80%;
-  width: 80%;
-  max-height: 200px;
+    max-height: 200px;
   resize: none;
   box-sizing: border-box;
   padding: 10px;
   font-size: 16px;
   height: 50px;
-  position: absolute;
-  z-index: 1;
 }
-.header-2{
-position: relative;
+.Addtask{
+  height: 40px; /* Fixed button height */
+  padding: 0 15px;
+  font-size: 16px;
+  white-space: nowrap;
 }
-.edit-css{
-  position: relative;
-  z-index: 1;
-}
-button.Addtask {
-  position: absolute;
-  right: 10px;
+.task-title-input {
+  flex: 1; /* Allow the textarea to take up remaining space */
 }
 
 /* Modal Styles */
 .modal-overlay {
+  /* visibility: visible; */
   position: fixed;
   top: 0;
   left: 0;
@@ -217,18 +204,17 @@ button.Addtask {
   justify-content: center;
   z-index: 1000;
 }
-
 .modal-content {
+  /* background: rgb(226, 12, 12); */
   border-radius: 8px;
   padding: 10px;
   max-width: 700px;
   width: 100%;
   position: relative;
-  max-height: 80vh;
-  overflow-y: auto;
-  transition: height 0.3s ease;
+  max-height: 80vh; /* Set a max-height to limit the modal size */
+  overflow-y: auto; /* Enable scrolling if content exceeds the max-height */
+  transition: height 0.3s ease; /* Smooth transition for height changes */
 }
-
 .modal-header {
   display: flex;
   justify-content: end;
@@ -240,44 +226,41 @@ button.Addtask {
   font-size: 1.5rem;
   cursor: pointer;
 }
-
-.model-close:active {
+.model-close:active{
   border: none;
   outline: none;
 }
-
 .modal-body {
   margin-top: 10px;
-  max-height: calc(80vh - 60px);
-  overflow-y: auto;
+  max-height: calc(80vh - 60px); /* Adjust this based on modal header/footer */
+  overflow-y: auto; /* Make the modal body scrollable if needed */
 }
-
 .modal-textarea {
   width: 100%;
   min-height: 100px;
   padding: 10px;
   font-size: 16px;
+  border: 0px solid #ddd;
+   border-radius: 4px; 
   border: none;
-  border-radius: 4px;
   box-sizing: border-box;
-  resize: none;
-  overflow-y: hidden;
+  resize: none; /* Disable manual resizing */
+  overflow-y: scroll; /* Hide vertical scrollbar */
 }
-
-.modal-textarea:focus {
+.modal-textarea:focus{
   outline: black;
-  border: 1px solid rgba(0, 0, 0, 0.5);
+  border:1px solid rgba(0, 0, 0, 0.5) 
 }
-
 ::-webkit-scrollbar {
   width: 10px;
 }
-
+/* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #f1f1f1; 
 }
-
+ 
+/* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #888; 
 }
 </style>

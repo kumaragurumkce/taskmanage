@@ -1,77 +1,294 @@
 <template>
-  <div class="dropdown" @click="toggleDropdown">
-    <button class="dropdown-button">
-      Dropdown button
-    </button>
-    <ul v-if="isOpen" class="dropdown-menu">
-      <li><a href="#" @click="selectItem">Action 1</a></li>
-      <li><a href="#" @click="selectItem">Action 2</a></li>
-      <li><a href="#" @click="selectItem">Action 3</a></li>
-    </ul>
+  <div class="container-fluid">
+    <h1 class="text-center">Task Management</h1>
+    <div class="row content-1">
+      
+        
+        <form @submit.prevent="submitForm">
+          <div class=" header-2 ">
+            <textarea
+              id="expandableInput"
+              class="border-none task-title-input me-2"
+              :class="{'border-success-custom': isValid, 'border-danger-custom': titleError}"
+              v-model="task.title"
+              placeholder="Task Title"
+              :style="{ height: textareaHeight, overflowY: overflow }"
+              @input="addtaskInputheightadjust"
+              @blur="validateinputAdd"
+              ref="textarea"
+            />
+            <div v-if="titleError" class="text-danger error-message blinking-message">
+            {{ titleError }}
+          </div>
+            <button type="submit" class="Addtask ">
+              {{ isEditing ? 'Update Task' : 'Add Task' }}
+            </button>
+          
+          </div>
+          
+        </form>
+     
+    </div>
+<div class="edit-css">
+    <TaskList @edit-task="editTask" />
+  </div> <!-- Custom Modal -->
+    <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-content" :style="{ background: task.backgroundColor }">
+        <div class="modal-header">
+          <button class="model-close border-none" @click="closeModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <textarea
+            class="modal-textarea"
+            :style="{ background: task.backgroundColor }"
+            v-model="task.title"
+            @input="adjustTextareaHeight"
+            @blur="updateTask"
+            ref="textarea"
+            autofocus
+            placeholder="Edit Task Title"
+          ></textarea>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+import TaskList from '../views/tasklist.vue';
+
 export default {
+name:'Sample',
+  components: {
+    TaskList,
+  },
   data() {
     return {
-      isOpen: false,
+      task: { id: null, title: '', date: '', backgroundColor: '', fontColor: '' },
+      isEditing: false,
+      showModal: false,
+      titleError: '',
+      isValid: false,
+      textareaHeight: '50px',
+      maxHeight: '200px',
+      overflow: 'hidden',
     };
   },
   methods: {
-    toggleDropdown() {
-      this.isOpen = !this.isOpen;
+    ...mapActions(['addTask', 'updateTask']),
+
+    submitForm() {
+      // Perform validation before submitting
+      this.validateinputAdd();
+      
+      if (this.isValid) {
+        if (this.isEditing) {
+          this.updateTask(this.task);
+        } else {
+          this.task.id = Date.now();
+          const now = new Date();
+          const date = now.toISOString().split('T')[0];
+          this.task.date = date;
+          this.task.backgroundColor = this.getLightBackgroundColor();
+          this.task.fontColor = this.getDarkFontColor();
+          this.addTask(this.task);
+        }
+        this.resetForm();
+      }
     },
-    selectItem() {
-      this.isOpen = false; // Close dropdown after selection
+
+    validateinputAdd() {
+      // Validation logic
+      if (this.task.title.trim() === '') {
+        this.titleError = 'Task cannot be empty. Please enter a task before adding it.';
+        this.isValid = false;
+      } else {
+        this.titleError = '';
+        this.isValid = true;
+      }
     },
+
+    addtaskInputheightadjust() {
+      this.$nextTick(() => {
+        const textarea = this.$refs.textarea;
+        textarea.style.height = '50px';
+        const scrollHeight = textarea.scrollHeight;
+
+        if (scrollHeight > parseInt(this.maxHeight)) {
+          textarea.style.height = this.maxHeight;
+          textarea.style.overflowY = 'auto';
+        } else {
+          textarea.style.height = `${scrollHeight}px`;
+          textarea.style.overflowY = 'hidden';
+        }
+      });
+    },
+
+    resetForm() {
+      this.task = { id: null, title: '', date: '', backgroundColor: '', fontColor: '' };
+      this.isEditing = false;
+      this.titleError = '';
+      this.isValid = false;
+      this.textareaHeight = '50px';
+      this.overflow = 'hidden';
+      this.addtaskInputheightadjust(); // Adjust height on form reset
+    },
+
+    editTask(task) {
+      this.task = { ...task };
+      this.isEditing = true;
+      this.showModal = true;
+      this.$nextTick(() => {
+        this.adjustTextareaHeight(); // Adjust height when the modal is shown
+      });
+    },
+
+    updateTask() {
+      if (this.isEditing) {
+        this.$store.dispatch('updateTask', this.task);
+        this.resetForm();
+        this.closeModal();
+      }
+    },
+
+    closeModal() {
+      this.showModal = false;
+    },
+
+    adjustTextareaHeight() {
+      const textarea = this.$refs.textarea;
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    },
+
+    getLightBackgroundColor() {
+      const hue = Math.floor(Math.random() * 360);
+      const saturation = 60 + Math.random() * 20;
+      const lightness = 80 + Math.random() * 10;
+      return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    },
+
+    getDarkFontColor() {
+      const hue = Math.floor(Math.random() * 360);
+      const saturation = 40 + Math.random() * 20;
+      const lightness = 20 + Math.random() * 10;
+      return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    },
+  },
+  mounted() {
+    this.addtaskInputheightadjust();
   },
 };
 </script>
 
-<style scoped>
-/* Dropdown container */
-.dropdown {
+<style>
+textarea {
+    max-height: 200px;
+  resize: none;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+  height: 50px;
+  position: absolute;
+  z-index: 2;
+
+}
+.error-message{
+  position: absolute;
+  left: 30%;
+  top: 50px;
+}
+.header-2{
+position: relative;
+
+/* width: 75%; */
+}
+button.Addtask {
+  position: absolute;
+  /* right: 10px; */
+}
+.edit-css{
   position: relative;
-  display: inline-block;
+  z-index: 1;
+  top: 25px;
 }
 
-/* Dropdown button styling */
-.dropdown-button {
-  background-color: #3498db;
-  color: white;
-  padding: 10px 15px;
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  border-radius: 8px;
+  padding: 10px;
+  max-width: 700px;
+  width: 100%;
+  position: relative;
+  max-height: 80vh;
+  overflow-y: auto;
+  transition: height 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: end;
+}
+
+.model-close {
+  background: none;
   border: none;
+  font-size: 1.5rem;
   cursor: pointer;
 }
 
-/* Dropdown menu styling */
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  width: 150px;
+.model-close:active {
+  border: none;
+  outline: none;
 }
 
-/* Dropdown items */
-.dropdown-menu li {
-  margin: 0;
+.modal-body {
+  margin-top: 10px;
+  max-height: calc(80vh - 60px);
+  overflow-y: auto;
 }
 
-.dropdown-menu a {
-  display: block;
+.modal-textarea {
+  width: 100%;
+  min-height: 100px;
   padding: 10px;
-  color: #333;
-  text-decoration: none;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  box-sizing: border-box;
+  resize: none;
+  overflow-y: hidden;
 }
 
-/* Hover effect for items */
-.dropdown-menu a:hover {
-  background-color: #f1f1f1;
+.modal-textarea:focus {
+  outline: black;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
 }
 </style>

@@ -9,8 +9,8 @@
             v-model="newTaskTitle" :class="{'border-success-custom': isValid, 'border-danger-custom': titleError}"
              :style="{ height: textareaHeight, overflowY: overflow }"
              @input="handleInput"
-              @blur="validateinputAdd"
-              ref="textarea"
+             @blur="validateinputAdd"
+             ref="textarea"
              placeholder="Task Title" />
             <button type="submit" class="Addtask">
               Add Task

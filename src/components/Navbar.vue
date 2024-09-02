@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <div class="navbar-1">
+    <div class="navbar-1 sticky-top">
       <div class="logo text-white">{{ $t('TASK') }}</div>
       <ul class="links">
         <li>
@@ -75,7 +75,6 @@ export default {
       isDropdownOpen: false,
     };
   }, mounted() {
-    // Check local storage for the saved locale and set it
     const savedLocale = localStorage.getItem('locale');
     if (savedLocale) {
       this.$i18n.locale = savedLocale;
@@ -129,13 +128,17 @@ export default {
 ul li{
     list-style: none;
 }
-body{
-    background: #645d5d;
-}
+
 
 nav{
-    position: relative;
+    position: sticky;
     padding: 0 2rem;
+    top: 0;
+    z-index: 100;
+    -webkit-box-shadow: 0px 4px 5px 0px rgba(105,120,218,1);
+-moz-box-shadow: 0px 7px 10px 0px rgba(105,120,218,1);
+box-shadow: 0px 7px 10px 0px rgba(105,120,218,1);
+
 }
 .navbar-1{
 width: 100%;
@@ -145,6 +148,7 @@ margin: 0 auto;
 display: flex;
 align-items: center;
 justify-content: space-between;
+
 }
 
 .links{

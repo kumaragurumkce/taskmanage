@@ -1,3 +1,12 @@
 {
-    "TASK": "タスク"
+    "TASK": "タスク",
+    "Home":"ホーム",
+    "History":"ヒストリー",
+    "Sample":"サンプル",
+    "Profile":"プロファイル",
+    "Logout":"ログアウト",
+    "Login":"ログイン",
+    "Add Task": "タスク 追加",
+    "Task Management":"タスク 管理",
+    "AddInputError":"タスクを入力してください。追加する前にタスクを入力してください。"
 }

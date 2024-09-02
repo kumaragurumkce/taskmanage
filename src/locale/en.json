@@ -1,3 +1,13 @@
 {
-    "TASK": "TASK"
+    "TASK": "TASK",
+    "Home":"Home",
+    "History":"History",
+    "Sample":"Sample",
+    "Profile":"Profile",
+    "Logout":"Logout",
+    "Login":"Login",
+    "Add Task": "Add Task",
+    "Task Management":"Task Management",
+    "AddInputError":"Task cannot be empty. Please enter a task before adding it."
+
 }

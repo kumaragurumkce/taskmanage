@@ -1,69 +1,80 @@
 <template>
-  <nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-      <router-link class="navbar-brand text-white" to="/">{{ $t('TASK') }}</router-link>
-      <button @click="langswt" class="langbtn ms-auto  d-block d-lg-none text-white">{{ langbtn }}</button>
-
-      <button class="navbar-toggler ms-5" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <router-link class="nav-link text-white" to="/" @click="closeNavbar">Home</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link text-white" to="/History" @click="closeNavbar">History</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link text-white" to="/sample" @click="closeNavbar">Sample</router-link>
-          </li>  
-          <li class="nav-item">
-            <router-link class="nav-link d-block d-lg-none" to="/"><i class="fa-solid fa-user user-profile"></i></router-link>
-          </li>
-        </ul>
-      </div>
-      <button @click="langswt" class="langbtn me-5 d-none d-lg-block text-white">{{ langbtn }}</button>
-      <div class="dropdown" :class="{ 'is-active': isDropdownOpen }">
-      
-      <i class="fa-regular fa-user user-profile"  @click="toggleDropdown"></i>
-
+  <nav>
+    <div class="navbar-1">
+      <div class="logo text-white">{{ $t('TASK') }}</div>
+      <ul class="links">
+        <li>
+          <router-link class="navList" to="/" @click="closeNavbar">{{ $t('Home') }}</router-link>
+        </li>
+        <li>
+          <router-link class="navList" to="/History" @click="closeNavbar">
+            {{ $t('History') }}
+          </router-link>
+        </li>
+        <li>
+          <router-link class="navList" to="/sample" @click="closeNavbar">
+            {{ $t('Sample') }}
+          </router-link>
+        </li>
+      </ul>
+      <div class="d-flex ms-lg-0 ms-auto">
+        <button @click="langswt" class="langbtn me-4 text-white">{{ langbtn }}</button>
+        <div class="dropdown" :class="{ 'is-active': isDropdownOpen }">
+        <i class="fa-regular fa-user user-profile mt-2 d-none d-lg-block"  @click="toggleDropdown"></i>
       <div class="dropdown-menu mt-3" v-if="isDropdownOpen">
-        <router-link class="dropdown-item text-white" @click="closeDropdown" to="/">Profile</router-link>
-        <router-link class="dropdown-item text-white" @click="closeDropdown" to="/Profile">Login</router-link>
-        <router-link class="dropdown-item text-white" @click="closeDropdown" to="/Profile">Logout</router-link>
-
+        <router-link class="dropdown-item text-white" @click="closeDropdown" to="/">{{ $t('Profile') }}</router-link>
+        <router-link class="dropdown-item text-white" @click="closeDropdown" to="/Profile">{{ $t('Login') }}</router-link>
+        <router-link class="dropdown-item text-white" @click="closeDropdown" to="/Profile">{{ $t('Logout') }}</router-link>
+   </div>
+   </div>
+      </div>
+      <div class="toggle-nav" @click="toggleMenu">
+        <i :class="toggleIcon"></i>
       </div>
     </div>
+    <div class="dropdown-menu-1" :class="{ open: isOpen }">
+      <ul>
+        <li>
+          <router-link class="nav-drop" to="/" @click="closeNavbar">{{ $t('Home') }}</router-link>
+        </li>
+        <li>
+          <router-link class="nav-drop" to="/History" @click="closeNavbar">
+            {{ $t('History') }}
+          </router-link>
+        </li>
+        <li>
+          <router-link class="nav-drop" to="/sample" @click="closeNavbar">
+            {{ $t('Sample') }}
+          </router-link>
+        </li>
+        <li>
+           <router-link class="nav-drop" @click="closeDropdown" to="/">{{ $t('Profile') }}</router-link>
+        </li>
 
-      <!-- <div class="dropdowns">
-        
-      <i class="fa-regular fa-user user-profile" @mouseleave="isOpen=false"></i>
-  
-        <div class="dropdown-content mt-2"  v-show="isOpen">
-            <router-link to="/Profile" @click="selectItem">Profile</router-link>
-            <router-link to="/Profile" @click="selectItem">Login</router-link>
-            <router-link to="/Profile" @click="selectItem">Logout</router-link>
-          </div>
+        <li>
+           <router-link class="nav-drop" @click="closeDropdown" to="/Profile">
+            {{ $t('Login') }}
+          </router-link>
+        </li>
+        <li>
+            <router-link class="nav-drop" @click="closeDropdown" to="/Profile">
+              {{ $t('Logout') }}
+            </router-link>
+        </li>
+      </ul>
     </div>
-    </div> -->
-      <!-- <router-link class="nav-link d-none d-lg-block" to="/"><i class="fa-solid fa-user user-profile"></i></router-link> -->
-</div>
-</nav>
+  </nav>
 </template>
 
 <script>
-import { nextTick } from 'vue';
-
 export default {
   data() {
     return {
+      isOpen: false,
       langbtn: '',
       isDropdownOpen: false,
-
     };
-  },
-  mounted() {
+  }, mounted() {
     // Check local storage for the saved locale and set it
     const savedLocale = localStorage.getItem('locale');
     if (savedLocale) {
@@ -73,6 +84,12 @@ export default {
     // Update the button label based on the current locale
     this.updateButtonLabel();
   },
+  computed: {
+    toggleIcon() {
+      return this.isOpen ? 'fas fa-xmark' : 'fas fa-bars';
+    }
+  },
+ 
   methods: {
     toggleDropdown() {
       this.isDropdownOpen = !this.isDropdownOpen;
@@ -80,7 +97,7 @@ export default {
     closeDropdown() {
       this.isDropdownOpen = false;
     },
-        langswt() {
+    langswt() {
       // Toggle between English ('EN') and Japanese ('JP')
       this.$i18n.locale = this.$i18n.locale === 'EN' ? 'JP' : 'EN';
 
@@ -94,14 +111,141 @@ export default {
       // Set the button label based on the current locale
       this.langbtn = this.$i18n.locale === 'EN' ? '日本語' : 'English';
     },
-    closeNavbar(){
-nextTick(()=>{
-const navbarNav = document.getElementById('navbarNav');
-if(navbarNav  && navbarNav.classList.contains('show')){
-    navbarNav.classList.remove('show');
-}
-});
+      toggleMenu() {
+      this.isOpen = !this.isOpen;
+    },
+    closeNavbar() {
+      this.isOpen = false;
     }
-  },
+
+  }
 };
 </script>
+
+<style scoped>
+/* Include your custom styles or import an external stylesheet here */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css');
+
+ul li{
+    list-style: none;
+}
+body{
+    background: #645d5d;
+}
+
+nav{
+    position: relative;
+    padding: 0 2rem;
+}
+.navbar-1{
+width: 100%;
+height: 60px;
+max-width: 1200px;
+margin: 0 auto;
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+
+.links{
+    display: flex;
+    gap: 2rem;
+    margin-top: 10px;
+}
+.toggle-nav {
+    color: rgba(105,120,218,1);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: none;
+}
+
+.dropdown-menu-1{
+    display: none;
+    background-color: rgba(255, 255, 255, 0.1);
+    width:100%;
+    backdrop-filter: blur(15px);
+    border-radius: 5px;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    
+}
+
+.dropdown-menu-1.open {
+    display: block;
+}
+
+.dropdown-menu-1 ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.dropdown-menu-1 li {
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+    
+/* .router-link-active {
+    color: orange; 
+    font-weight: bold; 
+    border-bottom: 2px solid orange; 
+} */
+
+.router-link-exact-active {
+
+} 
+.navList{
+  position: relative;
+  display: block;
+  padding: 10px 0;
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.navList::after{
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #ffffff;
+  transform: scaleX(0);
+  transform-origin: bottom center;
+  transition: transform 0.3s ease-out;
+}
+.navList:hover::after{
+  transform: scaleX(1);
+  transform-origin: bottom center;
+}
+.nav-drop{
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+}
+.logo{
+font-weight: 700;
+font-size: 20px;
+}
+/* Responsive */
+@media (max-width: 992px) {
+    .navbar-1 .links {
+        display: none;
+    }
+    .navbar-1 .toggle-nav {
+        display: block;
+    }
+}
+
+@media (max-width: 576px) {
+    .dropdown-menu-1{
+        width:unset;
+    left: 2rem;
+    }
+}
+
+</style>

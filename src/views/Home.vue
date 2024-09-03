@@ -54,12 +54,13 @@ export default {
   },
   data() {
   return {
-    task: { id: null, title: '', date: '', backgroundColor: '', fontColor: '' },
+    task: { id: null, title: '', date: '', backgroundColor: '', fontColor: '', bookMarked : false},
     newTaskTitle: '', // Initialize as an empty string
     modalTitle: '', // Initialize as an empty string
     showModal: false,
     titleError: '',
     isValid: false,
+    bookMarked:false,
     textareaHeight: '50px',
     maxHeight: '200px',
     overflow: 'hidden',

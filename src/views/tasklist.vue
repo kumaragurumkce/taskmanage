@@ -11,7 +11,9 @@
               {{ task.date }}
               </div>
 
-            <div class="position-absolute bottom-0 end-0">
+            <div class="position-absolute bottom-0 end-0 me-1">
+              <i class="fa-regular fa-copy me-4 col-2"></i>
+
               <i class="fa-regular fa-pen-to-square editIcon col-2 me-4" @click="editTask(task)"></i>
               <i class="fa-regular fa-trash-can deleteIcon" @click="handleDelete(task.id)"></i>
             </div>

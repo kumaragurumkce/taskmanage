@@ -1,5 +1,3 @@
-globalThis.__VUE_PROD_HYDRATION_MISMATCH_DETAILS__ = false;
-
 import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';
 import App from './App.vue';

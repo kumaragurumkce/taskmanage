@@ -1,3 +1,27 @@
+
+.setReminder{
+  border-radius: 10px;
+  background-color: #56a1ec;
+}
+.reminder-form input{
+background-color: #8cc1f5;
+border: none;
+}
+.datepicker{
+  cursor: pointer;
+}
+.custom-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #f8f9fa;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
 .opacity-1{
   opacity: 0;
   transition: opacity 0.4s ease;
@@ -31,7 +55,7 @@ background: rgb(105,120,218);
     max-width: 500px;
     border: 2px solid #89ACFA ;
 }
-.bookMark{
+.taskreminder,.bookMark{
 cursor: pointer;
 }
 .copyIcon,.deleteIcon,.editIcon{

@@ -51,9 +51,33 @@ const store = createStore({
       state.tasks = state.tasks.filter(task => task.id !== taskId);
       localStorage.setItem('tasks', JSON.stringify(state.tasks));
     },
+    setTaskReminder(state, { taskId, reminderDateTime }) {
+      const task = state.tasks.find(task => task.id === taskId);
+      if (task) {
+        console.log(`Setting reminder for task ${taskId}: ${reminderDateTime}`);
+        task.reminderDateTime = reminderDateTime;
+        localStorage.setItem('tasks', JSON.stringify(state.tasks)); // Update local storage
+      } else {
+        console.log(`Task with id ${taskId} not found.`);
+      }
+    }
   },
   actions: {
-    // Actions for managing name tasks
+    updateTaskReminder({ commit }, { taskId, reminderDateTime }) {
+      console.log('Updating task reminder:', taskId, reminderDateTime);
+      commit('setTaskReminder', { taskId, reminderDateTime });
+    },
+    async triggerNotification({ state }, { id, dateTime }) {
+      const task = state.tasks.find(task => task.id === id);
+      if (task) {
+        const bellSound = new Audio(require('@/assets/bell.wav'));
+        bellSound.play();
+    
+        // Return data needed for the notification
+        return { title: task.title, dateTime: new Date(dateTime).toLocaleString() };
+      }
+      return null;
+    },
     addItem({ commit }, name) {
       commit('ADD_NAME', name);
     },

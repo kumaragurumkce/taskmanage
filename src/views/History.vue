@@ -9,6 +9,12 @@
           {{ item.name }} - {{ item.date }}
         </li>
       </ul>
+
+      <ul>
+        <li v-for="item in bookItems.slice().reverse()" :key="item.id">
+          {{ item.title }}
+        </li>
+      </ul>
     </div>
   </template>
   
@@ -22,7 +28,7 @@
       };
     },
     computed: {
-      ...mapGetters(['items'])
+      ...mapGetters(['items', 'bookItems'])
     },
     methods: {
       ...mapActions(['addItem']),

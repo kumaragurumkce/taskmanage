@@ -6,7 +6,9 @@ const store = createStore({
       
       tasks: JSON.parse(localStorage.getItem('tasks')) || [],
       namestore: JSON.parse(localStorage.getItem('namestore')) || [],
-      locale:'EN'
+      locale:'EN',
+      book:JSON.parse(localStorage.getItem('book')) || [],
+      
     };
   },
   mutations: {
@@ -15,8 +17,25 @@ const store = createStore({
       state.namestore.push(name);
       localStorage.setItem('namestore', JSON.stringify(state.namestore));
     },
+    ADD_BOOK(state, taskId) {
+      const task = state.tasks.find(t => t.id === taskId);
+      if (task) {
+          // Update the bookMarked state of the task
+          task.bookMarked = !task.bookMarked;
 
-    // Mutations for managing general tasks
+          // Update the `book` array based on the updated `bookMarked` status
+          if (task.bookMarked) {
+              if (!state.book.find(b => b.id === taskId)) {
+                  state.book.push(task);
+              }
+          } else {
+              state.book = state.book.filter(b => b.id !== taskId);
+          }
+
+          // Persist the updated `book` array to local storage
+          localStorage.setItem('book', JSON.stringify(state.book));
+      }
+  },
     ADD_TASK(state, task) {
       state.tasks.push(task);
       localStorage.setItem('tasks', JSON.stringify(state.tasks));
@@ -32,14 +51,42 @@ const store = createStore({
       state.tasks = state.tasks.filter(task => task.id !== taskId);
       localStorage.setItem('tasks', JSON.stringify(state.tasks));
     },
+    setTaskReminder(state, { taskId, reminderDateTime }) {
+      const task = state.tasks.find(task => task.id === taskId);
+      if (task) {
+        console.log(`Setting reminder for task ${taskId}: ${reminderDateTime}`);
+        task.reminderDateTime = reminderDateTime;
+        localStorage.setItem('tasks', JSON.stringify(state.tasks)); // Update local storage
+      } else {
+        console.log(`Task with id ${taskId} not found.`);
+      }
+    }
   },
   actions: {
-    // Actions for managing name tasks
+    updateTaskReminder({ commit }, { taskId, reminderDateTime }) {
+      console.log('Updating task reminder:', taskId, reminderDateTime);
+      commit('setTaskReminder', { taskId, reminderDateTime });
+    },
+    async triggerNotification({ state }, { id, dateTime }) {
+      const task = state.tasks.find(task => task.id === id);
+      if (task) {
+        const bellSound = new Audio(require('@/assets/bell.wav'));
+        bellSound.play();
+    
+        // Return data needed for the notification
+        return { title: task.title, dateTime: new Date(dateTime).toLocaleString() };
+      }
+      return null;
+    },
     addItem({ commit }, name) {
       commit('ADD_NAME', name);
     },
-
-    // Actions for managing general tasks
+    async toggleBookmark({ commit }, taskId) {
+      commit('ADD_BOOK', taskId);
+      // Ensure local storage is updated
+      const updatedBook = JSON.parse(localStorage.getItem('book')) || [];
+      console.log('Updated localStorage book:', updatedBook);
+  },
     addTask({ commit }, task) {
       commit('ADD_TASK', task);
     },
@@ -51,14 +98,25 @@ const store = createStore({
     },
   },
   getters: {
-    // Getters for accessing name tasks
     items: state => state.namestore,
+    bookItems: state => state.book,
+    allTasks(state) {
+      return state.tasks.map(task => {
+          const isBookmarked = state.book.find(b => b.id === task.id);
+          return {
+              ...task,
+              bookMarked: !!isBookmarked
+          };
+      });
+  }
 
-    // Getters for accessing general tasks
-    allTasks: state => state.tasks,
   },
+  
 });
-
+const tasksFromLocalStorage = JSON.parse(localStorage.getItem('tasks')) || [];
+const bookFromLocalStorage = JSON.parse(localStorage.getItem('book')) || [];
+console.log('Tasks from local storage:', tasksFromLocalStorage);
+console.log('Bookmarks from local storage:', bookFromLocalStorage);
 export default store;
 
 

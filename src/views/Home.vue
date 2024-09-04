@@ -54,15 +54,18 @@ export default {
   },
   data() {
   return {
-    task: { id: null, title: '', date: '', backgroundColor: '', fontColor: '' },
+    task: { id: null, title: '', date: '', backgroundColor: '', fontColor: '', bookMarked : false},
     newTaskTitle: '', // Initialize as an empty string
     modalTitle: '', // Initialize as an empty string
     showModal: false,
     titleError: '',
     isValid: false,
+    bookMarked:false,
     textareaHeight: '50px',
     maxHeight: '200px',
     overflow: 'hidden',
+    socket: null,
+
   };
 },
 
@@ -164,6 +167,20 @@ export default {
   },
   mounted() {
     this.adjustTextareaHeight();
+    this.socket = new WebSocket('ws://192.168.254.128:8081/ws');
+
+this.socket.onerror = (error) => {
+  console.error('WebSocket error:', error);
+};
+
+this.socket.onclose = (event) => {
+  console.error('WebSocket closed:', event);
+};
+  },
+  beforeUnmount() {
+    if (this.socket) {
+      this.socket.close();
+    }
   },
 };
 </script>
